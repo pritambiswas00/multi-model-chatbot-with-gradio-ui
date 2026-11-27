@@ -11,7 +11,7 @@ from expression import Result, Ok, Error
 def chat_with_model(model_client: Anthropic, user_input: str):
     """Send user input to the model and return its text response."""
     if not user_input.strip():
-        return Ok("Please enter a message")
+        return Error("Please enter a message")
     try:
         response = model_client.messages.create(
             model="claude-sonnet-5-5",
