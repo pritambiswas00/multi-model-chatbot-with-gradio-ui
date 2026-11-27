@@ -11,7 +11,14 @@ from multi_model_chatbot_with_gradio_ui.lib import to_display_stream, to_display
 STREAMING = True
 
 def main() -> None:
-    """Display the configured API key and a startup message."""
+    """Load configuration, create the model client and launch the Gradio UI.
+
+    The ``STREAMING`` flag selects between a streaming interface (reply updates
+    as it is generated) and a non-streaming one (full reply at once).
+
+    Raises:
+        pydantic.ValidationError: If ``ANTHROPIC_API_KEY`` is missing or invalid.
+    """
     config = Config()  # pyright: ignore[reportCallIssue]
     model_client = initialize_model_client(config)
     interface: Option[Interface] = NOTHING

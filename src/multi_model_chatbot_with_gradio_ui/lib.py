@@ -1,4 +1,9 @@
-"""Initialize the multi-model chatbot library."""
+"""Chat helpers for the multi-model chatbot.
+
+Wraps the Anthropic Messages API and reports failures as ``Result`` values
+(``Ok`` with the reply, ``Error`` with a user-facing Markdown message) rather
+than raising, so the UI layer can display either outcome directly.
+"""
 from anthropic import (
     Anthropic,
     APIConnectionError,
@@ -10,8 +15,19 @@ from expression import Result, Ok, Error
 from collections.abc import Iterator
 
 
-def chat_with_model(model_client: Anthropic, user_input: str):
-    """Send user input to the model and return its text response."""
+def chat_with_model(model_client: Anthropic, user_input: str) -> Result[str, str]:
+    """Send a single message to the model and return the complete reply.
+
+    Args:
+        model_client: Configured Anthropic client used to make the request.
+        user_input: The user's message. Blank input is not sent to the API.
+
+    Returns:
+        ``Ok`` with the concatenated text blocks of the model's reply.
+        ``Ok`` with a prompt asking for a message if ``user_input`` is blank.
+        ``Error`` with a user-facing message if the API call fails
+        (invalid API key, rate limit, connection problem or other HTTP error).
+    """
     if not user_input.strip():
         return Ok("Please enter a message")
     try:
@@ -35,7 +51,18 @@ def chat_with_model(model_client: Anthropic, user_input: str):
     return Ok(result)
 
 def chat_with_model_with_stream(model_client: Anthropic, user_input: str) -> Iterator[Result[str, str]]:
-    """Send user input to the model and return its text response."""
+    """Send a single message to the model and stream the reply as it is generated.
+
+    Args:
+        model_client: Configured Anthropic client used to make the request.
+        user_input: The user's message. Blank input is not sent to the API.
+
+    Yields:
+        ``Ok`` with the *accumulated* reply text so far, once per text delta,
+        so the last item is the full reply. Yields a single ``Error`` if the
+        input is blank or the API call fails (invalid API key, rate limit,
+        connection problem or other HTTP error).
+    """
     if not user_input.strip():
         yield Error("Please enter a message")
         return
@@ -62,11 +89,35 @@ def chat_with_model_with_stream(model_client: Anthropic, user_input: str) -> Ite
 
 
 def to_display(model_client: Anthropic, message: str) -> str:
-    """Unwrap a Result into text for the UI. Both branches are shown to the user."""
+    """Get a complete reply as display text for the UI.
+
+    Calls ``chat_with_model`` and unwraps the ``Result``. Both the reply and
+    any error message are shown to the user.
+
+    Args:
+        model_client: Configured Anthropic client used to make the request.
+        message: The user's message.
+
+    Returns:
+        The model's reply, or the error message if the request failed.
+    """
     result = chat_with_model(model_client, message)
     return result.default_with(lambda err: err)
 
 def to_display_stream(model_client: Anthropic, message: str) -> Iterator[str]:
+    """Stream a reply as display text for the UI.
+
+    Calls ``chat_with_model_with_stream`` and unwraps each ``Result``. Both
+    reply text and error messages are shown to the user.
+
+    Args:
+        model_client: Configured Anthropic client used to make the request.
+        message: The user's message.
+
+    Yields:
+        The accumulated reply text so far, or the error message if the
+        request failed.
+    """
     result = chat_with_model_with_stream(model_client, message)
     for r in result:
         yield r.default_with(lambda err: err)
