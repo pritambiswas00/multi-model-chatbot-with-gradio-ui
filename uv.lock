@@ -239,6 +239,18 @@ wheels = [
 ]
 
 [[package]]
+name = "expression"
+version = "6.0.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/61/f0/87887a762d6715ec9bb29a72862b06bdaf61fa4557ccf202bc4560a9cf3e/expression-6.0.1.tar.gz", hash = "sha256:8916493f6e6392a413f13096af2099ec43f8e433022f19862788f61b708b1435", size = 224284, upload-time = "2026-11-12T18:28:54.94Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/22/bc/8ac4520a23c9dde77ad6d8aceb5b390d52752da3d824dda35d99359476c4/expression-6.0.1-py3-none-any.whl", hash = "sha256:65b68f6363fc8a1c5e33d260ad9c2cb9526d098fa53684df554e301cc7860502", size = 87471, upload-time = "2026-11-12T18:28:53.739Z" },
+]
+
+[[package]]
 name = "fastapi"
 version = "0.165.0"
 source = { registry = "https://pypi.org/simple" }
@@ -787,6 +799,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "anthropic" },
+    { name = "expression" },
     { name = "gradio" },
     { name = "ipython" },
     { name = "pydantic" },
@@ -796,6 +809,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "anthropic", specifier = ">=2.14.0" },
+    { name = "expression", specifier = ">=6.0.1" },
     { name = "gradio", specifier = ">=6.32.0" },
     { name = "ipython", specifier = ">=9.19.1" },
     { name = "pydantic", specifier = ">=2.14.4" },
