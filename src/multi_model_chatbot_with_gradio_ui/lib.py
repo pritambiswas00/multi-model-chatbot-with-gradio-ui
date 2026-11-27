@@ -29,7 +29,7 @@ def chat_with_model(model_client: Anthropic, user_input: str) -> Result[str, str
         (invalid API key, rate limit, connection problem or other HTTP error).
     """
     if not user_input.strip():
-        return Ok("Please enter a message")
+        return Error("Please enter a message")
     try:
         response = model_client.messages.create(
             model="claude-sonnet-5-5",
