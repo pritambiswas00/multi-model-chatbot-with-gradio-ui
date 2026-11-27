@@ -1,0 +1,23 @@
+[project]
+name = "multi-model-chatbot-with-gradio-ui"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Pritam Biswas", email = "pritambiswas060@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=2.14.0",
+    "gradio>=6.32.0",
+    "ipython>=9.19.1",
+    "pydantic>=2.14.4",
+    "pydantic-settings>=2.16.3",
+]
+
+[project.scripts]
+multi-model-chatbot-with-gradio-ui = "multi_model_chatbot_with_gradio_ui.main:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
