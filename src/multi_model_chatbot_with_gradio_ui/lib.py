@@ -24,7 +24,7 @@ def chat_with_model(model_client: Anthropic, user_input: str) -> Result[str, str
 
     Returns:
         ``Ok`` with the concatenated text blocks of the model's reply.
-        ``Ok`` with a prompt asking for a message if ``user_input`` is blank.
+        ``Error`` with a prompt asking for a message if ``user_input`` is blank.
         ``Error`` with a user-facing message if the API call fails
         (invalid API key, rate limit, connection problem or other HTTP error).
     """
